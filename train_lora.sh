@@ -1,0 +1,17 @@
+python train_network.py \
+  --pretrained_model_name_or_path=/mnt/ssd1/models/CyberRealistic/CyberRealistic_V5_FP32.safetensors \
+  --train_data_dir=/mnt/ssd1/dataset/photo_alina \
+  --output_dir=/mnt/ssd1/train/alina \
+  --logging_dir=/mnt/ssd1/train/log \
+  --resolution=512,512 \
+  --learning_rate=5e-4 \
+  --lr_scheduler=constant \
+  --lr_warmup_steps=0 \
+  --train_batch_size=1 \
+  --gradient_accumulation_steps=1 \
+  --max_train_steps=2000 \
+  --save_every_n_steps=1000 \
+  --mixed_precision="fp16" \
+  --network_module=networks.lora \
+  --network_dim=128 \
+  --output_name="lora_model"
