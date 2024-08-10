@@ -13,7 +13,7 @@ LABEL_FILENAME = "selected_tags.csv"
 
 # Define the models
 MODEL_REPOS = {
-    "SmilingWolf/wd-v1-4-swinv2-tagger-v2": "/mnt/ssd1/models/wd-v1-4-swinv2-tagger-v2",
+    "SmilingWolf/wd-v1-4-swinv2-tagger-v2": "/Users/johnny/models/wd-v1-4-swinv2-tagger-v2",
     # Add other models here if needed
 }
 
