@@ -35,10 +35,6 @@ def load_labels(dataframe):
 
 # Prepare image
 def prepare_image(image, target_size):
-    #canvas = Image.new("RGBA", image.size, (255, 255, 255))
-    #canvas.alpha_composite(image.convert("RGBA"))
-    #image = canvas.convert("RGB")
-
     # Ensure image is in RGB mode if not already
     image = image.convert("RGB")
 
@@ -129,19 +125,23 @@ class Predictor:
 
         return rating, character_res, general_res
 
-def format_tags(tags_dict):
+def format_tags(tags_dict, add_tags=None):
     """
     Format the dictionary of tags into a comma-separated string.
     """
     # Extract and sort the tags
     sorted_tags = sorted(tags_dict.keys())
+
+    # Prepend the additional tags if provided
+    if add_tags:
+        sorted_tags = add_tags + sorted_tags
     
     # Join the tags into a comma-separated string
     formatted_tags = ", ".join(sorted_tags)
     
     return formatted_tags
 
-def tag_images(image_folder, model_name, general_thresh, general_mcut_enabled, character_thresh, character_mcut_enabled):
+def tag_images(image_folder, model_name, general_thresh, general_mcut_enabled, character_thresh, character_mcut_enabled, add_tags):
     predictor = Predictor()
     image_files = [f for f in os.listdir(image_folder) if f.endswith(('jpg', 'jpeg', 'png'))]
 
@@ -157,7 +157,7 @@ def tag_images(image_folder, model_name, general_thresh, general_mcut_enabled, c
             character_mcut_enabled
         )
         
-        tags = format_tags(general_res)
+        tags = format_tags(general_res, add_tags)
         print(tags)
         
         output_file = os.path.join(image_folder, f"{os.path.splitext(image_file)[0]}.txt")
@@ -172,6 +172,7 @@ def main():
     parser.add_argument("--general_mcut_enabled", action="store_true", help="Use MCut threshold for general tags")
     parser.add_argument("--character_thresh", type=float, default=0.85, help="Threshold for character tags")
     parser.add_argument("--character_mcut_enabled", action="store_true", help="Use MCut threshold for character tags")
+    parser.add_argument("--add_tags", nargs="+", help="List of tags to prepend to each image's tags")
     args = parser.parse_args()
 
     tag_images(
@@ -180,7 +181,8 @@ def main():
         args.general_thresh,
         args.general_mcut_enabled,
         args.character_thresh,
-        args.character_mcut_enabled
+        args.character_mcut_enabled,
+        args.add_tags
     )
 
 if __name__ == "__main__":
